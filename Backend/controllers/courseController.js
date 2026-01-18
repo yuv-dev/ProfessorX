@@ -52,11 +52,11 @@ async function generateCourse(req, res) {
  * @param {*} res
  * @returns
  */
-const { getCompleteCourse } = require("../services/Course/getCourse");
+const { getCompleteCourseById } = require("../services/Course/getCourse");
 async function fetchCourse(req, res) {
   try {
     const { courseId } = req.params;
-    const courseDoc = await getCompleteCourse(courseId);
+    const courseDoc = await getCompleteCourseById(courseId);
     return res.status(200).json({ course: courseDoc });
   } catch (err) {
     console.error("fetchCourse error:", err);
@@ -126,10 +126,32 @@ async function fetchCourseQuiz(req, res) {
   }
 }
 
+/**
+ * Get all courses
+ * @param {*} req
+ * @param {*} res
+ */
+
+const { getAllCourses } = require("../services/Course/getCourse");
+
+const fetchAllCourses = async (req, res) => {
+  try {
+    console.log("fetchAllCourses called");
+    const courses = await getAllCourses();
+    return res.status(200).json(courses);
+  } catch (err) {
+    console.error("fetchAllCourses error:", err);
+    return res
+      .status(500)
+      .json({ error: "server_error", details: err.message });
+  }
+};
+
 module.exports = {
   generateCourse,
   fetchCourse,
   fetchCourseModule,
   fetchCourseProject,
   fetchCourseQuiz,
+  fetchAllCourses,
 };

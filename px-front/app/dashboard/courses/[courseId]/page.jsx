@@ -1,11 +1,15 @@
-import CourseFrontend from "@/Components/CourseFrontend";
-import {pythonCourse} from "@/lib/PythonCourse";
+import { getCourseById } from "@/lib/api-client";
+import CourseFrontend from "@/Components/course/CourseFrontend";
 
-const page = () => {
-  
+const page = async ({ params }) => {
+  const { courseId } = await params;
+  const response = await getCourseById(courseId);
+  const courseData = response.course || {};
+  console.log("Course Data:", courseData);
+
   return (
-      <div>
-          course
+    <div className=" text-black">
+      <CourseFrontend courseData={courseData} />
     </div>
   );
 };

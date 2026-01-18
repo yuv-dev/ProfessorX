@@ -1,35 +1,31 @@
 "use client";
 
 import { useState } from "react";
-
-type Profile = {
-  currentLevel: string;
-  knownLanguages: string[];
-  targetLanguage: string;
-  learningGoal: string;
-  preferredStyle: string;
-};
+import { generateCourse } from "@/lib/api-client";
 
 export default function CreateCoursePage() {
-  const [profile, setProfile] = useState<Profile>({
-    currentLevel: "beginner",
-    knownLanguages: [],
-    targetLanguage: "",
-    learningGoal: "",
-    preferredStyle: "project-based",
-  });
+  const [profile, setProfile] =
+    useState <
+    Profile >
+    {
+      currentLevel: "beginner",
+      knownLanguages: [],
+      targetLanguage: "",
+      learningGoal: "",
+      preferredStyle: "project-based",
+    };
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [course, setCourse] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [course, setCourse] = useState(null);
+  const [error, setError] = useState(null);
 
-  const handleChange = (field: keyof Profile, value: any) => {
+  const handleChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
-  };   
+  };
 
-  const handleKnownLanguagesChange = (value: string) => {
+  const handleKnownLanguagesChange = (value) => {
     const arr = value
       .split(",")
       .map((v) => v.trim())
@@ -37,29 +33,34 @@ export default function CreateCoursePage() {
     handleChange("knownLanguages", arr);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setCourse(null);
 
     try {
-      const resp = await fetch("/api/generate-course", {
-        method: "POST",
-        body: JSON.stringify({
-          user: { name, email },
-          profile,
-        }),
+      // const resp = await fetch("/api/generate-course", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     user: { name, email },
+      //     profile,
+      //   }),
+      // });
+      const body = JSON.stringify({
+        user: { name, email },
+        profile,
       });
+      const resp = await generateCourse(body);
 
-      const data = await resp.json();
       if (!resp.ok) {
-        setError(data.error || "Something went wrong");
+        setError(resp.error || "Something went wrong");
         return;
       }
+      console.log("resp", resp);
 
-      setCourse(data.course);
-    } catch (err: any) {
+      setCourse(resp.course);
+    } catch (err) {
       setError(err.message || "Request failed");
     } finally {
       setLoading(false);
@@ -172,7 +173,7 @@ export default function CreateCoursePage() {
           <h2 className="text-xl font-semibold">Your Course</h2>
           <p className="text-sm text-gray-600">{course.roadmap}</p>
           <div className="mt-4 space-y-3">
-            {course.modules?.map((m: any, idx: number) => (
+            {course.modules?.map((m, idx) => (
               <div key={idx} className="border rounded p-3">
                 <h3 className="font-semibold">{m.moduleTitle}</h3>
                 <p className="text-sm text-gray-700">{m.summary}</p>

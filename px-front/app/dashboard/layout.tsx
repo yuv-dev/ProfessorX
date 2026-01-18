@@ -10,7 +10,10 @@ const layout = ({
   return (
     <div className="flex h-screen overflow-hidden">
       <SideBar />
-        <div className="flex-1 overflow-y-auto bg-white">{children}</div>
+      <div id="main-content" className="flex-1 overflow-y-auto bg-white">
+        <Header />
+        {children}
+      </div>
     </div>
   );
 };

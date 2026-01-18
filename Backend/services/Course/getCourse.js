@@ -1,21 +1,38 @@
 const Course = require("../../models/courseModel");
 
 //Returns course data without population
-async function getCourse(courseId) {
+async function getCourseById(courseId) {
   const fullData = await Course.findById(courseId);
 
   return fullData;
 }
 
 // Returns course data with populated modules, projects, and quizzes
-async function getCompleteCourse(courseId) {
+async function getCompleteCourseById(courseId) {
   const fullData = await Course.findById(courseId)
     .populate("modules")
     .populate("projects")
     .populate("weeklyQuizzes")
     .exec();
 
+  console.log("Populated course data:", JSON.stringify(fullData, null, 2));
   return fullData;
 }
 
-module.exports = { getCourse, getCompleteCourse };
+async function getAllCourses() {
+  const allcourses = await Course.find().select("title description createdAt");
+  return allcourses;
+}
+
+async function getAllCoursesByUser(userId) {
+  const userCourses = await Progress.find({ userId: userId })
+    .populate("courseId", "title description createdAt") // Get course details
+    .exec();
+  return userCourses;
+}
+module.exports = {
+  getCourseById,
+  getCompleteCourseById,
+  getAllCourses,
+  getAllCoursesByUser,
+};

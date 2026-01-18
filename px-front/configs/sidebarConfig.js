@@ -12,8 +12,8 @@ import {
 export const sidebarItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
   { label: "My Courses", icon: BookOpen, path: "/dashboard/courses" },
-  { label: "Lessons", icon: GraduationCap, path: "/dashboard/lessons" },
-  { label: "Assignments", icon: ClipboardList, path: "/dashboard/assignments" },
+  { label: "Browse Course", icon: GraduationCap, path: "/dashboard/browse" },
+  { label: "Assessments", icon: ClipboardList, path: "/dashboard/assesments" },
   { label: "Progress", icon: BarChart, path: "/dashboard/progress" },
   { label: "Settings", icon: Settings, path: "/dashboard/settings" },
 ];

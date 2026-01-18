@@ -7,6 +7,11 @@ const ProgressSchema = new mongoose.Schema({
     ref: "Course",
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["active", "completed", "dropped"],
+    default: "active",
+  },
   profile: {
     currentLevel: {
       type: String,
@@ -19,9 +24,12 @@ const ProgressSchema = new mongoose.Schema({
     preferredStyle: String,
   },
   completedModules: [{ type: mongoose.Schema.Types.ObjectId }], // Array of module IDs or names
-  completedQuizes: [{ type: mongoose.Schema.Types.ObjectId }], // Array of Quizes IDs or names
+  completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId }], // Array of Quizes IDs or names
   // completedProjects: [{ type: mongoose.Schema.Types.ObjectId }], // Array of Projects IDs or names
+  enrolledAt: { type: Date, default: Date.now },
   lastAccessed: { type: Date, default: Date.now },
 });
+
+ProgressSchema.index({ userId: 1, courseId: 1 }, { unique: true });
 
 module.exports = mongoose.model("Progress", ProgressSchema);

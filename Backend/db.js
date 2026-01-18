@@ -18,10 +18,14 @@ const connectDB = async () => {
     await mongoose.connect(DB_URL);
     console.log("MongoDB connected successfully");
 
-    const Course = require("./models/courseModel");
-    // Test the connection by fetching all courses
-    const allcourses = await Course.find().select("title");
-    console.log("All courses in the database:", allcourses);
+    const User = require("./models/userModel");
+
+    // Test the connection by fetching all user and  courses
+    const allUser = await User.find();
+    // console.log("All users in the database:", allUser);
+    const { getAllCourses } = require("./services/Course/getCourse");
+    const allcourses = await getAllCourses();
+    // console.log("All courses in the database:", allcourses);
     //Voila All Well!
   } catch (error) {
     console.error(error);

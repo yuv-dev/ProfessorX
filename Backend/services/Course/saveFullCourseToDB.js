@@ -18,8 +18,8 @@ async function saveFullCourseToDB(parsedCourse) {
     const savedModules = await Promise.all(
       parsedCourse.modules.map(async (mod) => {
         const newMod = await Module.create({ ...mod, courseId: course._id });
-        return { _id: newMod._id, title: mod.moduleTitle };
-      })
+        return newMod._id;
+      }),
     );
     console.log("Module instance created:", savedModules);
 
@@ -37,8 +37,8 @@ async function saveFullCourseToDB(parsedCourse) {
           ...quiz,
           courseId: course._id,
         });
-        return { _id: newQuiz._id, week: quiz.week };
-      })
+        return newQuiz._id;
+      }),
     );
     console.log("Quizzez instance created:", savedQuizzes);
 

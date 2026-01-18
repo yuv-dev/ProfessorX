@@ -1,22 +1,17 @@
-const jwt = require('jsonwebtoken');
-
-const secret = process.env.JWT_SECRET || 'your_super_secret_key';
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/env");
 
 const verifyToken = (req, res, next) => {
-    // Get token from the Authorization header
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract the token part after 'Bearer'
+  const token = req.cookies.token; // Get token from cookies
+  if (!token) return res.status(401).json({ error: "No token provided" });
 
-    if (token == null) return res.sendStatus(401); // If no token, unauthorized
-
-    jwt.verify(token, secret, (err, user) => {
-        if (err) {
-            console.error('Token verification failed:', err.message);
-            return res.sendStatus(403); // If token is invalid or expired, forbidden
-        }
-        req.user = user; // Add decoded user payload to the request object
-        next(); // Proceed to the protected route handler
-    });
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ error: "Invalid token" });
+    req.user = decoded; // Set req.user to decoded payload (includes id)
+    next();
+  });
 };
+
+module.exports = verifyToken;
 
 module.exports = verifyToken;

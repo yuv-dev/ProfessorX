@@ -8,8 +8,8 @@ const page = async () => {
   return (
     <div className="max-w-7xl mx-auto px-8">
       <header className="mb-10">
-        <h1 className="text-3xl font-bold text-slate-900">My Learning</h1>
-        <p className="text-slate-500">Pick up where you left off.</p>
+        <h1 className="text-3xl font-bold text-slate-900">Browse Courses</h1>
+        <p className="text-slate-500">Enroll into the course you wanna learn</p>
       </header>
 
       {enrollments.length === 0 ? (

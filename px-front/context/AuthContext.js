@@ -1,27 +1,26 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "@/lib/axiosInstance";
+import { logoutUser } from "@/lib/api-client";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() =>{
-    
+  useEffect(() => {
     const session = async () => {
       try {
         console.log("Restoring session...");
         const res = await api.get("/api/auth/me");
-        setUser(res.data.user)
-      }
-      catch (err) {
-        setUser(null)
-      }
-      finally{
+        setUser(res.data.user);
+        console.log("Session restored:", res.data.user);
+      } catch (err) {
+        setUser(null);
+      } finally {
         setLoading(false);
       }
-    }
+    };
     session();
   }, []);
 
@@ -44,14 +43,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await fetch("http://localhost:4000/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+    await logoutUser();
 
     setUser(null); // clear context
   };
-
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
