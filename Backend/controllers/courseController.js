@@ -29,7 +29,13 @@ async function generateCourse(req, res) {
     }
 
     // 4) Parse LLM result
-    parsedCourse = JSON.parse(result.content);
+    let jsonString = result.content.trim();
+    if (jsonString.startsWith('```json')) {
+      jsonString = jsonString.replace(/```json\s*/, '').replace(/\s*```$/, '');
+    } else if (jsonString.startsWith('```')) {
+      jsonString = jsonString.replace(/```\s*/, '').replace(/\s*```$/, '');
+    }
+    const parsedCourse = JSON.parse(jsonString);
 
     // 5) Save course to DB
     const savedCourse = await saveFullCourseToDB(parsedCourse);

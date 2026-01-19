@@ -7,10 +7,12 @@ import {
   BarChart,
   Settings,
   LogOut,
+  CircleFadingPlus
 } from "lucide-react";
 
 export const sidebarItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
+  { label: "Create Course", icon: CircleFadingPlus, path: "/dashboard/create-course" },
   { label: "My Courses", icon: BookOpen, path: "/dashboard/courses" },
   { label: "Browse Course", icon: GraduationCap, path: "/dashboard/browse" },
   { label: "Assessments", icon: ClipboardList, path: "/dashboard/assesments" },
