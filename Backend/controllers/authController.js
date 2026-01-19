@@ -12,9 +12,8 @@ const googleAuthController = async (req, res) => {
     // 3. Set HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      // secure:process.env.NODE_ENV === "production",
-      secure:true,
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -25,7 +24,6 @@ const googleAuthController = async (req, res) => {
   }
 };
 
-
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/env");
 const User = require("../models/userModel");
@@ -34,28 +32,29 @@ const restoreSessionController = async (req, res) => {
   try {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ user: null });
-  
-      const decoded = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(decoded.id).select("-password");
-    
-      return res.status(200).json({ user });
-  
-    } catch (error) {
-      console.error("Restore session error:", error);
-      res.status(401).json({ user: null });
-    }
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Restore session error:", error);
+    res.status(401).json({ user: null });
+  }
 };
-  
+
 // Logout User
-const logoutController = async (req, res) => { 
+const logoutController = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    secure: true,
-    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
   });
 
   return res.json({ success: true });
 };
 
-module.exports = { googleAuthController, restoreSessionController, logoutController };
+module.exports = {
+  googleAuthController,
+  restoreSessionController,
+  logoutController,
+};

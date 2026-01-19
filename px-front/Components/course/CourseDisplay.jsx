@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import {
-  Clock,
   BookOpen,
   Code,
   List,
@@ -18,6 +17,9 @@ const CourseDisplay = ({
   onModuleSelect,
   quizHistory,
   handleQuizRecord,
+  isEnrolled = false,
+  onEnroll,
+  enrollmentLoading = false,
 }) => {
   // Calculate quick stats from the history
   const totalAttempted = quizHistory.length;
@@ -30,13 +32,34 @@ const CourseDisplay = ({
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16"
     >
       {/* Header */}
-      <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-blue-600 tracking-tight">
-          {data.title}
-        </h1>
-        <p className="text-xl text-gray-600 leading-relaxed">
-          {data.description}
-        </p>
+      <div className="relative">
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-blue-600 tracking-tight">
+            {data.title}
+          </h1>
+          <p className="text-xl text-gray-600 leading-relaxed">
+            {data.description}
+          </p>
+        </div>
+        <div className="absolute top-0 right-0">
+          <button
+            onClick={isEnrolled ? undefined : onEnroll}
+            disabled={isEnrolled || enrollmentLoading}
+            className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
+              isEnrolled
+                ? "bg-green-100 text-green-800 cursor-not-allowed opacity-75"
+                : enrollmentLoading
+                  ? "bg-blue-400 text-white cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:scale-105 active:scale-95"
+            }`}
+          >
+            {enrollmentLoading
+              ? "Enrolling..."
+              : isEnrolled
+                ? "Enrolled"
+                : "Enroll Now"}
+          </button>
+        </div>
       </div>
       {/* Roadmap Section */}
       <RoadMap {...data} />

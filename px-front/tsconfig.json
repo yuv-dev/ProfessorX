@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/Components/Login/GoogleButton.jsx", "Components/LearningRoadmapUI.jsx", "app/dashboard/page.jsx", "app/create-course/page.jsx"  ],
+, "app/Components/Login/GoogleButton.jsx", "Components/LearningRoadmapUI.jsx", "app/dashboard/page.jsx", "app/create-course/page.jsx", "app/dashboard/browse/page.jsx", "app/dashboard/layout.tsx"  ],
   "exclude": ["node_modules"]
 }

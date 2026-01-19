@@ -144,6 +144,7 @@ const fetchAllCourses = async (req, res) => {
   try {
     console.log("fetchAllCourses called");
     const courses = await getAllCourses();
+    console.log("fetchAllCourses called", courses);
     return res.status(200).json(courses);
   } catch (err) {
     console.error("fetchAllCourses error:", err);

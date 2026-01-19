@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/env");
 
 const verifyToken = (req, res, next) => {
+  //Issue is here
   const token = req.cookies.token; // Get token from cookies
   if (!token) return res.status(401).json({ error: "No token provided" });
 
@@ -11,7 +12,5 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
-
-module.exports = verifyToken;
 
 module.exports = verifyToken;

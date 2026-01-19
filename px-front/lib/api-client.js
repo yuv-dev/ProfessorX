@@ -46,8 +46,27 @@ export const client = {
   delete: (url, options) => apiRequest(url, { ...options, method: "DELETE" }),
 };
 
+/*************************************************************************** */
+
+// API functions
+
 export const getUserEnrolledCourses = async (userId) => {
-  return await client.get(`/api/progress/user/${userId}?populate=courseId`);
+  return await client.get(`/api/progress/user/${userId}?populate=courseId`, {
+    credentials: "include",
+  });
+};
+
+export const enrollInCourse = async (courseId) => {
+  const body = { courseId: courseId };
+  return await client.post("/api/progress/enroll", body, {
+    credentials: "include",
+  });
+};
+
+export const checkEnrollment = async (courseId) => {
+  return await client.get(`/api/progress/check/${courseId}`, {
+    credentials: "include",
+  });
 };
 
 export const getAllCourses = async () => {
@@ -63,7 +82,9 @@ export const getCourseById = async (courseId) => {
 };
 
 export const generateCourse = async (body) => {
-  return await client.post("/api/courses/generate", body);
+  return await client.post("/api/courses/generate", body, {
+    credentials: "include",
+  });
 };
 
 export const logoutUser = async () => {

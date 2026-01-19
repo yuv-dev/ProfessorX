@@ -1,29 +1,36 @@
 import { ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"; // Import icons
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 
 const MiniProjectSlider = ({ projects }) => {
-    console.log("MiniProjectSlider projects:", projects);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
-  };
 
-  const prevSlide = () => {
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+  }, [projects.length]);
+
+  const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
-  };
+  }, [projects.length]);
 
   // Auto-play logic
   React.useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || !projects.length) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000); // Changes every 5 seconds
 
     return () => clearInterval(interval);
-  }, [currentIndex, isPaused]);
+  }, [isPaused, nextSlide, projects.length]);
+
+  // Reset currentIndex if projects change and currentIndex is out of bounds
+  React.useEffect(() => {
+    if (currentIndex >= projects.length && projects.length > 0) {
+      setCurrentIndex(0);
+    }
+  }, [projects.length, currentIndex]);
 
   return (
     <div
@@ -127,4 +134,19 @@ const MiniProjectSlider = ({ projects }) => {
   );
 };
 
-export default MiniProjectSlider;
+export default memo(MiniProjectSlider, (prevProps, nextProps) => {
+  // Custom comparison: only re-render if projects array actually changed
+  if (!prevProps.projects || !nextProps.projects) {
+    return prevProps.projects === nextProps.projects;
+  }
+
+  if (prevProps.projects.length !== nextProps.projects.length) {
+    return false;
+  }
+
+  // Shallow comparison of project titles (assuming that's the key identifier)
+  return prevProps.projects.every(
+    (project, index) =>
+      project.projectTitle === nextProps.projects[index]?.projectTitle,
+  );
+});
