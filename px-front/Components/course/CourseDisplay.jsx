@@ -1,4 +1,6 @@
+"use client";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   BookOpen,
   Code,
@@ -11,16 +13,22 @@ import Accordion from "../ui/Accordion.jsx";
 import MiniProjectSlider from "./MiniProjectSlider.jsx";
 import QuizItem from "./QuizItem.jsx";
 import RoadMap from "./RoadMap.jsx";
+import StudyGuide from "./StudyGuide.jsx";
 
 const CourseDisplay = ({
   data,
-  onModuleSelect,
+  onProjectSelect,
   quizHistory,
   handleQuizRecord,
   isEnrolled = false,
   onEnroll,
   enrollmentLoading = false,
 }) => {
+  const router = useRouter();
+
+  const moduleSelect = (module) => {
+    router.push(`/dashboard/courses/${data._id}/modules/${module._id}`);
+  };
   // Calculate quick stats from the history
   const totalAttempted = quizHistory.length;
   const correctCount = quizHistory.filter((q) => q.isCorrect).length;
@@ -65,12 +73,7 @@ const CourseDisplay = ({
       <RoadMap {...data} />
 
       {/* Study Guide Footer */}
-      <section className="border border-gray-200 bg-gray-100 rounded-xl p-8 mb-10">
-        <h3 className="text-xl font-bold mb-4 text-gray-800">
-          Study Guide & Resources
-        </h3>
-        <p className="text-gray-600 mb-4 text-xl">{data.studyGuide}</p>
-      </section>
+      <StudyGuide data={data.studyGuide} />
 
       {/* Modules Grid */}
       <section>
@@ -82,7 +85,7 @@ const CourseDisplay = ({
             <motion.div
               whileHover={{ y: -5 }}
               key={mod._id}
-              onClick={() => onModuleSelect(mod)}
+              onClick={() => moduleSelect(mod)}
               className="bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-xl hover:border-blue-300 transition-all cursor-pointer flex flex-col h-full overflow-hidden group"
             >
               <div className="p-6 grow">
@@ -122,7 +125,10 @@ const CourseDisplay = ({
           <MiniProjectSlider projects={data.projects.miniProjects} />
 
           {/* Final Project (Takes up 2 cols) */}
-          <div className="md:col-span-2 bg-linear-to-br from-gray-900 to-gray-800 text-white rounded-xl p-8 shadow-lg relative overflow-hidden">
+          <div
+            onClick={() => onProjectSelect(data.projects?.finalProject)}
+            className="cursor-pointer md:col-span-2 bg-linear-to-br from-gray-900 to-gray-800 text-white rounded-xl p-8 shadow-lg relative overflow-hidden group transition-all duration-300 hover:scale-[1.01]"
+          >
             <div className="absolute top-0 right-0 p-32 bg-blue-600 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
 
             <div className="relative z-10">
@@ -144,27 +150,39 @@ const CourseDisplay = ({
                   <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                     Core Features
                   </h4>
-                  <ul className="space-y-1">
-                    {data.projects?.finalProject?.features?.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>{" "}
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="relative max-h-32 overflow-hidden group/list">
+                    <ul className="space-y-1">
+                      {data.projects?.finalProject?.features?.map((f, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>{" "}
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-gray-900 to-transparent pointer-events-none"></div>
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                     Stretch Goals
                   </h4>
-                  <ul className="space-y-1">
-                    {data.projects?.finalProject?.stretchGoals?.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>{" "}
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="relative max-h-32 overflow-hidden">
+                    <ul className="space-y-1">
+                      {data.projects?.finalProject?.stretchGoals?.map(
+                        (f, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>{" "}
+                            {f}
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                    <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-gray-900 to-transparent pointer-events-none"></div>
+                  </div>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-6 mt-6">
@@ -172,27 +190,38 @@ const CourseDisplay = ({
                   <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                     Tech Requirements
                   </h4>
-                  <ul className="space-y-1">
-                    {data.projects?.finalProject?.requirements?.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>{" "}
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="relative max-h-32 overflow-hidden">
+                    <ul className="space-y-1">
+                      {data.projects?.finalProject?.requirements?.map(
+                        (f, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>{" "}
+                            {f}
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                    <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-gray-900 to-transparent pointer-events-none"></div>
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                     Steps to Complete Project
                   </h4>
-                  <ul className="space-y-1">
-                    {data.projects?.finalProject?.steps?.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>{" "}
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="relative max-h-32 overflow-hidden">
+                    <ul className="space-y-1">
+                      {data.projects?.finalProject?.steps?.map((f, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm">
+                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>{" "}
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-gray-900 to-transparent pointer-events-none"></div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -18,15 +18,15 @@ const geminiAiServices = async ({ prompt }) => {
       console.log(`Attempt ${attempt} to call Gemini API`);
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        // Updated to the current standard free-tier model
+        model: "gemini-2.5-flash",
         contents: [
           {
             role: "user",
             parts: [
               {
                 text:
-                  "You are a helpful assistant that outputs a single JSON object only.\n\n" +
-                  prompt,
+                  "Generate a course structure based on this prompt: " + prompt,
               },
             ],
           },
@@ -34,6 +34,8 @@ const geminiAiServices = async ({ prompt }) => {
         generationConfig: {
           maxOutputTokens: 5000,
           temperature: 0.2,
+          // THE CURRENT STANDARD: Explicitly force JSON output
+          responseMimeType: "application/json",
         },
       });
 

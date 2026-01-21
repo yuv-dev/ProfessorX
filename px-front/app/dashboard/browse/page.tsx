@@ -21,16 +21,11 @@ const Page = () => {
     const fetchAllCourses = async () => {
       try {
         setLoading(true);
-        console.log("Fetching all courses...");
         const response = await getAllCourses();
-        console.log("API Response:", response);
         const allCourses = response?.courses || response || [];
-        console.log("All courses extracted:", allCourses);
-        console.log("All courses length:", allCourses.length);
 
         // Sort courses based on selected criteria
         const sortedCourses = sortCourses(allCourses, sortBy);
-        console.log("Sorted courses:", sortedCourses);
         setCourses(sortedCourses);
       } catch (err) {
         console.error("Error fetching courses:", err);

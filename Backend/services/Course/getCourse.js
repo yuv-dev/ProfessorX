@@ -15,7 +15,6 @@ async function getCompleteCourseById(courseId) {
     .populate("weeklyQuizzes")
     .exec();
 
-  console.log("Populated course data:", JSON.stringify(fullData, null, 2));
   return fullData;
 }
 

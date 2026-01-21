@@ -12,5 +12,7 @@ const {
 router.post("/generate", generateCourse);
 router.get("/all", fetchAllCourses);
 router.get("/id/:courseId", fetchCourse);
+router.get("/modules/id/:moduleId", fetchCourseModule);
+router.get("/projects/id/:projectId", fetchCourseProject);
 
 module.exports = router;

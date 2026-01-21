@@ -26,7 +26,6 @@ exports.googleLogin = async (credential) => {
     user.picture = picture;
     await user.save();
   }
-  console.log("Authenticated user:", user);
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
   return { token, user };

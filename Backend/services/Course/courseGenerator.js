@@ -1,10 +1,12 @@
 require("dotenv").config();
 const axios = require("axios");
-const { geminiAiServices } = require("../geminiAiServices");
+const { geminiAiServices } = require("../../AI/Services/geminiAiServices");
 const PERPLEXITY_KEY = process.env.PERPLEXITY_API_KEY;
 const MODEL = process.env.PERPLEXITY_MODEL || "sonar-deep-research";
 
 async function generateCourseOneShot(prompt) {
+  
+  //Perplexity API call - commented out in favor of Gemini AI and will be used later to fetch citations
   // const url = "https://api.perplexity.ai/chat/completions";
   // const payload = {
   //   model: MODEL,

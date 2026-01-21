@@ -21,7 +21,6 @@ const enrollInCourse = async (req, res) => {
   try {
     const { courseId } = req.body;
     const userId = req.user.id;
-  console.log("enroll in Course called", courseId, userId);
     // Check if already enrolled
     const existingProgress = await Progress.findOne({ userId, courseId });
     if (existingProgress) {
@@ -50,7 +49,6 @@ const checkEnrollment = async (req, res) => {
     const { courseId } = req.params;
     const userId = req.user.id;
 
-    console.log("checkEnrollment called", courseId, userId);
 
     const progress = await Progress.findOne({ userId, courseId });
     const isEnrolled = !!progress;

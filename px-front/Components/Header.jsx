@@ -25,8 +25,7 @@ export default function Header() {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      console.log(searchkeyword);
-      alert(`Enter key pressed! Value: ${searchkeyword}`);
+      alert(`Enter key pressed! Value: ${searchkeyword}`); // Later will be deeloped into a full search function
     }
   };
 

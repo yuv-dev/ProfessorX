@@ -10,6 +10,7 @@ async function apiRequest(endpoint, options = {}) {
       //   'X-Internal-Secret': process.env.INTERNAL_SERVICE_TOKEN,
       ...headers,
     },
+    credentials: "include", //Since we are using cookie based auth
     ...extraOptions,
   };
 
@@ -51,22 +52,16 @@ export const client = {
 // API functions
 
 export const getUserEnrolledCourses = async (userId) => {
-  return await client.get(`/api/progress/user/${userId}?populate=courseId`, {
-    credentials: "include",
-  });
+  return await client.get(`/api/progress/user/${userId}?populate=courseId`);
 };
 
 export const enrollInCourse = async (courseId) => {
   const body = { courseId: courseId };
-  return await client.post("/api/progress/enroll", body, {
-    credentials: "include",
-  });
+  return await client.post("/api/progress/enroll", body);
 };
 
 export const checkEnrollment = async (courseId) => {
-  return await client.get(`/api/progress/check/${courseId}`, {
-    credentials: "include",
-  });
+  return await client.get(`/api/progress/check/${courseId}`);
 };
 
 export const getAllCourses = async () => {
@@ -81,12 +76,30 @@ export const getCourseById = async (courseId) => {
   });
 };
 
-export const generateCourse = async (body) => {
-  return await client.post("/api/courses/generate", body, {
-    credentials: "include",
+export const getCourseModuleById = async (moduleId) => {
+  return await client.get(`/api/courses/modules/id/${moduleId}`, {
+    next: { revalidate: 10 },
   });
 };
 
+export const getCourseProjectById = async (projectId) => {
+  return await client.get(`/api/courses/projects/id/${projectId}`, {
+    next: { revalidate: 10 },
+  });
+};
+
+export const generateCourse = async (body) => {
+  return await client.post("/api/courses/generate", body);
+};
+
+export const googleLogin = async (credential) => {
+  return await client.post("/api/auth/google", { credential });
+};
+
+export const restoreSession = async () => {
+  return await client.get("/api/auth/me");
+};
+
 export const logoutUser = async () => {
-  return await client.post("/api/auth/logout", { credentials: "include" });
+  return await client.post("/api/auth/logout");
 };

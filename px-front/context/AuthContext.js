@@ -1,7 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import api from "@/lib/axiosInstance";
-import { logoutUser } from "@/lib/api-client";
+import { googleLogin, restoreSession, logoutUser } from "@/lib/api-client";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -11,12 +10,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const session = async () => {
       try {
-        console.log("Restoring session...");
-        const res = await api.get("/api/auth/me");
-        setUser(res.data.user);
-        console.log("Session restored:", res.data.user);
+        const res = await restoreSession();
+        setUser(res.user);
       } catch (err) {
         setUser(null);
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -26,15 +24,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentialResponse) => {
     try {
-      console.log("Google Credential Response:", credentialResponse);
       const credential = credentialResponse.credential;
       // Send the token to your backend for verification and user info retrieval
-      const response = await api.post("/api/auth/google", {
-        credential,
-      });
+      const response = await googleLogin(credential);
 
-      console.log("Login successful:", response.data);
-      const userData = response.data.user;
+      const userData = response.user;
       setUser(userData);
       // You can store the token in local storage or context for further use
     } catch (error) {

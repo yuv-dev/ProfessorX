@@ -30,10 +30,10 @@ async function generateCourse(req, res) {
 
     // 4) Parse LLM result
     let jsonString = result.content.trim();
-    if (jsonString.startsWith('```json')) {
-      jsonString = jsonString.replace(/```json\s*/, '').replace(/\s*```$/, '');
-    } else if (jsonString.startsWith('```')) {
-      jsonString = jsonString.replace(/```\s*/, '').replace(/\s*```$/, '');
+    if (jsonString.startsWith("```json")) {
+      jsonString = jsonString.replace(/```json\s*/, "").replace(/\s*```$/, "");
+    } else if (jsonString.startsWith("```")) {
+      jsonString = jsonString.replace(/```\s*/, "").replace(/\s*```$/, "");
     }
     const parsedCourse = JSON.parse(jsonString);
 
@@ -41,9 +41,7 @@ async function generateCourse(req, res) {
     const savedCourse = await saveFullCourseToDB(parsedCourse);
 
     // 6) return parsed course to frontend
-    return res
-      .status(201)
-      .json({ courseId: savedCourse._id, course: savedCourse });
+    return res.status(201).json({ ok: true, courseId: savedCourse._id });
   } catch (err) {
     console.error("generateCourse error:", err);
     return res
@@ -105,7 +103,7 @@ async function fetchCourseProject(req, res) {
     const projectDoc = await getProjectById(projectId);
     return res.status(200).json({ module: projectDoc });
   } catch (err) {
-    console.error("fetchCourseModule error:", err);
+    console.error("fetchCourseProject error:", err);
     return res
       .status(500)
       .json({ error: "server_error", details: err.message });
@@ -142,9 +140,7 @@ const { getAllCourses } = require("../services/Course/getCourse");
 
 const fetchAllCourses = async (req, res) => {
   try {
-    console.log("fetchAllCourses called");
     const courses = await getAllCourses();
-    console.log("fetchAllCourses called", courses);
     return res.status(200).json(courses);
   } catch (err) {
     console.error("fetchAllCourses error:", err);

@@ -1,4 +1,6 @@
+"use client";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Target,
@@ -8,7 +10,12 @@ import {
 } from "lucide-react";
 import Accordion from "@/Components/ui/Accordion.jsx";
 
-const Module = ({ module, onBack }) => {
+const Module = ({ module, courseId }) => {
+  const router = useRouter();
+  const onBack = () => {
+    router.push(`/dashboard/courses/${courseId}`);
+  };
+  console.log("Module Data:", module);
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -96,7 +103,9 @@ const Module = ({ module, onBack }) => {
                   <div className="mt-4 bg-pink-50 p-4 rounded-lg border border-pink-200">
                     <h4 className="font-bold text-pink-600 mb-2">
                       MiniQuiz:
-                      <span className="text-gray-700 text-xs"> #Search answers yourself!
+                      <span className="text-gray-700 text-xs">
+                        {" "}
+                        #Search answers yourself!
                       </span>
                     </h4>
                     <ul className="list-disc list-inside pl-2">

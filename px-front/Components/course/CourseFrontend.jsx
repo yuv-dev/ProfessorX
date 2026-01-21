@@ -2,13 +2,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import Module from "./Module.jsx";
+import Project from "./Project.jsx";
 import CourseDisplay from "./CourseDisplay.jsx";
 import { useAuth } from "@/context/AuthContext";
 import { checkEnrollment, enrollInCourse } from "@/lib/api-client";
 
 const CourseFrontend = ({ courseData }) => {
   const [activeModule, setActiveModule] = useState(null);
+  const [activeProject, setActiveProject] = useState(null);
+
   // STATE: Records all quiz attempts for future analysis
   const [quizHistory, setQuizHistory] = useState([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
@@ -65,29 +67,27 @@ const CourseFrontend = ({ courseData }) => {
     if (mainContent) {
       mainContent.scrollTo(0, 0);
     }
-  }, [activeModule]);
+  }, [activeModule, activeProject]);
+
+  const resetView = () => {
+    setActiveModule(null);
+    setActiveProject(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-slate-900">
       <AnimatePresence mode="wait">
-        {activeModule ? (
-          <Module
-            key="module-page"
-            module={activeModule}
-            onBack={() => setActiveModule(null)}
-          />
-        ) : (
           <CourseDisplay
             key="course-display"
             data={courseData}
             onModuleSelect={setActiveModule}
+            onProjectSelect={setActiveProject}
             handleQuizRecord={handleQuizRecord}
             quizHistory={quizHistory}
             isEnrolled={isEnrolled}
             onEnroll={handleEnroll}
             enrollmentLoading={enrollmentLoading}
           />
-        )}
       </AnimatePresence>
     </div>
   );
