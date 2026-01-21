@@ -88,6 +88,12 @@ export const getCourseProjectById = async (projectId) => {
   });
 };
 
+export const getProjectByCourseId = async (courseId) => {
+  return await client.get(`/api/courses/projects/${courseId}`, {
+    next: { revalidate: 10 },
+  });
+};
+
 export const generateCourse = async (body) => {
   return await client.post("/api/courses/generate", body);
 };

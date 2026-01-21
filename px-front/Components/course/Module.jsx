@@ -15,7 +15,6 @@ const Module = ({ module, courseId }) => {
   const onBack = () => {
     router.push(`/dashboard/courses/${courseId}`);
   };
-  console.log("Module Data:", module);
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}

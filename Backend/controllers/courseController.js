@@ -101,9 +101,29 @@ async function fetchCourseProject(req, res) {
   try {
     const { projectId } = req.params;
     const projectDoc = await getProjectById(projectId);
-    return res.status(200).json({ module: projectDoc });
+    return res.status(200).json({ project: projectDoc });
   } catch (err) {
     console.error("fetchCourseProject error:", err);
+    return res
+      .status(500)
+      .json({ error: "server_error", details: err.message });
+  }
+}
+
+/**
+ * Return project by Course ID
+ * @param {*} req
+ * @param {*} res
+ * @returns project Object
+ */
+const { getProjectByCourseId } = require("../services/Course/getProject");
+async function fetchProjectByCourseId(req, res) {
+  try {
+    const { courseId } = req.params;
+    const projectDoc = await getProjectByCourseId(courseId);
+    return res.status(200).json({ project: projectDoc });
+  } catch (err) {
+    console.error("fetchProjectByCourseId error:", err);
     return res
       .status(500)
       .json({ error: "server_error", details: err.message });
@@ -157,4 +177,5 @@ module.exports = {
   fetchCourseProject,
   fetchCourseQuiz,
   fetchAllCourses,
+  fetchProjectByCourseId,
 };

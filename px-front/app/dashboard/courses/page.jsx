@@ -21,13 +21,14 @@ const Page = () => {
         setLoading(true);
         const response = await getUserEnrolledCourses(user._id);
         const enrolledCourses =
-          response?.progress?.map((p) => ({
+        response?.progress?.map((p) => ({
             ...p.courseId,
             enrollmentDate: p.enrolledAt,
             lastAccessed: p.lastAccessed,
             progress: p, // Keep full progress data
           })) || [];
-
+          
+          console.log("Enrolled courses response:", enrolledCourses);
         // Sort courses based on selected criteria
         const sortedCourses = sortCourses(enrolledCourses, sortBy);
         setCourses(sortedCourses);

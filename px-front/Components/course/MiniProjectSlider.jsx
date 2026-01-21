@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"; // Import
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useCallback, memo } from "react";
 
-const MiniProjectSlider = ({ projects }) => {
+const MiniProjectSlider = ({ projects, onProjectSelect }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -64,12 +64,12 @@ const MiniProjectSlider = ({ projects }) => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
-            
+            onClick={() => onProjectSelect("mini", currentIndex)}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
-            className="h-full flex flex-col"
+            className="h-full flex flex-col cursor-pointer"
           >
             <h3 className="text-xl font-bold mb-3 text-blue-600">
               {projects[currentIndex].projectTitle}
@@ -83,19 +83,22 @@ const MiniProjectSlider = ({ projects }) => {
                 <h4 className="font-bold text-xs text-gray-400 uppercase mb-2">
                   Requirements
                 </h4>
-                <div className="space-y-2">
-                  {projects[currentIndex].requirements.map((req, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 text-sm text-gray-700"
-                    >
-                      <CheckCircle
-                        size={14}
-                        className="text-green-500 shrink-0"
-                      />
-                      <span>{req}</span>
-                    </div>
-                  ))}
+                <div className="relative max-h-32 overflow-hidden">
+                  <div className="space-y-2">
+                    {projects[currentIndex].requirements.map((req, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-2 text-sm text-gray-700"
+                      >
+                        <CheckCircle
+                          size={14}
+                          className="text-green-500 shrink-0"
+                        />
+                        <span>{req}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
                 </div>
               </div>
 
@@ -103,15 +106,18 @@ const MiniProjectSlider = ({ projects }) => {
                 <h4 className="font-bold text-xs text-gray-400 uppercase mb-2">
                   Roadmap Steps
                 </h4>
-                <div className="flex flex-wrap gap-2">
-                  {projects[currentIndex].steps.map((step, i) => (
-                    <span
-                      key={i}
-                      className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200"
-                    >
-                      {i + 1}. {step}
-                    </span>
-                  ))}
+                <div className="relative max-h-32 overflow-hidden">
+                  <div className="flex flex-wrap gap-2">
+                    {projects[currentIndex].steps.map((step, i) => (
+                      <span
+                        key={i}
+                        className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200"
+                      >
+                        {i + 1}. {step}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
                 </div>
               </div>
             </div>

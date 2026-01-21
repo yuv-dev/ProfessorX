@@ -1,49 +1,55 @@
-import { ChevronRight, Home } from "lucide-react";
+"use client";
+import { useCourse } from "@/context/CourseContext";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronRight, Home, BookOpen, Rocket } from "lucide-react";
 
-export default function Breadcrumbs({ 
-  courseTitle, 
-  activeModule, 
-  activeProject, 
-  onBack 
+export default function CourseBreadcrumbs({
+  activeTitle,
+  courseId,
+  courseTitle,
 }) {
+  const pathname = usePathname();
+
+  // Logic to determine if we are in a module or project
+  const isModule = pathname.includes("/modules/");
+  const isProject = pathname.includes("/projects/");
+
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6 animate-fade-in">
-      {/* Root Link */}
-      <button 
-        onClick={onBack}
-        className="flex items-center hover:text-indigo-600 transition-colors"
+    <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
+      {/* 1. Dashboard Link */}
+      <Link
+        href="/dashboard/courses"
+        className="flex items-center hover:text-blue-600 transition-colors"
       >
-        <Home size={16} className="mr-1" />
-        <span>Dashboard</span>
-      </button>
+        <Home size={14} className="mr-1" />
+        <span>My Courses</span>
+      </Link>
 
-      <ChevronRight size={14} className="text-gray-400" />
+      <ChevronRight size={14} className="text-gray-400 shrink-0" />
 
-      {/* Course Level */}
-      <button 
-        onClick={onBack}
-        className={`hover:text-indigo-600 transition-colors ${!activeModule && !activeProject ? 'font-semibold text-indigo-700' : ''}`}
+      {/* 2. Parent Course Link */}
+      <Link
+        href={`/dashboard/courses/${courseId}`}
+        className={`hover:text-blue-600 transition-colors ${!isModule && !isProject ? "font-bold text-gray-900" : ""}`}
       >
-        {courseTitle || "Course"}
-      </button>
+        {courseTitle}
+      </Link>
 
-      {/* Module Level */}
-      {activeModule && (
+      {/* 3. Dynamic Segment (Module or Project) */}
+      {(isModule || isProject) && (
         <>
-          <ChevronRight size={14} className="text-gray-400" />
-          <span className="font-semibold text-indigo-700 truncate max-w-[200px]">
-            {activeModule.moduleTitle}
-          </span>
-        </>
-      )}
-
-      {/* Project Level */}
-      {activeProject && (
-        <>
-          <ChevronRight size={14} className="text-gray-400" />
-          <span className="font-semibold text-indigo-700 truncate max-w-[200px]">
-            {activeProject.title}
-          </span>
+          <ChevronRight size={14} className="text-gray-400 shrink-0" />
+          <div className="flex items-center font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded-md">
+            {isModule ? (
+              <BookOpen size={14} className="mr-1.5" />
+            ) : (
+              <Rocket size={14} className="mr-1.5" />
+            )}
+            <span className="max-w-[150px] md:max-w-[300px] truncate">
+              {activeTitle || (isModule ? "Module" : "Project")}
+            </span>
+          </div>
         </>
       )}
     </nav>
