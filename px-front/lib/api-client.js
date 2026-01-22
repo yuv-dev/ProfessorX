@@ -1,3 +1,4 @@
+import { cache } from "react";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 async function apiRequest(endpoint, options = {}) {
@@ -64,17 +65,32 @@ export const checkEnrollment = async (courseId) => {
   return await client.get(`/api/progress/check/${courseId}`);
 };
 
+export const updateProgress = async (courseId, moduleId) => {
+  const body = { courseId, moduleId };
+  return await client.put("/api/progress/update-last-active-module", body);
+};
+
+export const getProgressByCourseId = async (courseId) => {
+  const response = await client.get(`/api/progress/course/${courseId}`);
+  return response;
+};
+
+export const markModuleCompleted = async (courseId, moduleId) => {
+  const body = { courseId, moduleId };
+  return await client.put("/api/progress/mark-module-completed", body);
+};
+
 export const getAllCourses = async () => {
   return await client.get("/api/courses/all", {
     next: { revalidate: 10 },
   });
 };
 
-export const getCourseById = async (courseId) => {
+export const getCourseById = cache(async (courseId) => {
   return await client.get(`/api/courses/id/${courseId}`, {
     next: { revalidate: 10 },
   });
-};
+});
 
 export const getCourseModuleById = async (moduleId) => {
   return await client.get(`/api/courses/modules/id/${moduleId}`, {

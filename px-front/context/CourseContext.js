@@ -6,7 +6,6 @@ import { createContext, useContext } from "react";
 const CourseContext = createContext(null);
 
 export function CourseProvider({ children, courseData }) {
-  console.log("CourseProvider received:", courseData);
   return (
     <CourseContext.Provider value={courseData}>
       {children}

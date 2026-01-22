@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Target,
@@ -9,12 +10,62 @@ import {
   BookOpen,
 } from "lucide-react";
 import Accordion from "@/Components/ui/Accordion.jsx";
+import {
+  updateProgress,
+  markModuleCompleted,
+  getProgressByCourseId,
+} from "@/lib/api-client.js";
 
 const Module = ({ module, courseId }) => {
   const router = useRouter();
+  const [isCompleted, setIsCompleted] = useState();
+  const [isCompleting, setIsCompleting] = useState(false);
+
+  useEffect(() => {
+    const getCourseProgress = async () => {
+      if (courseId) {
+        try {
+          const progressResponse = await getProgressByCourseId(courseId);
+          setIsCompleted(() =>
+            progressResponse.progress.completedModules.includes(module._id),
+          );
+        } catch (error) {
+          console.error("Error fetching progress:", error);
+        }
+      }
+    };
+
+    getCourseProgress();
+  }, [courseId, module._id]);
+
   const onBack = () => {
     router.push(`/dashboard/courses/${courseId}`);
   };
+
+  const handleModuleCompleted = async () => {
+    setIsCompleting(true);
+    try {
+      await markModuleCompleted(courseId, module._id);
+      await updateProgress(courseId, nextModule._id);
+      setIsCompleted(true);
+    } catch (error) {
+      console.error("Failed to mark module as completed:", error);
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
+  useEffect(() => {
+    const updateModuleProgress = async () => {
+      try {
+        await updateProgress(courseId, module._id);
+      } catch (error) {
+        console.error("Failed to update progress:", error);
+      }
+    };
+    updateModuleProgress();
+  }, [courseId, module._id]);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -116,6 +167,27 @@ const Module = ({ module, courseId }) => {
                 </div>
               </Accordion>
             ))}
+          </div>
+
+          {/* Module Completed Button */}
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={handleModuleCompleted}
+              disabled={isCompleted || isCompleting}
+              className={`px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200 ${
+                isCompleted
+                  ? "bg-green-600 cursor-not-allowed"
+                  : isCompleting
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg transform hover:scale-105 active:scale-95"
+              }`}
+            >
+              {isCompleting
+                ? "Marking as Completed..."
+                : isCompleted
+                  ? "Module Completed ✓"
+                  : "Mark Module as Completed"}
+            </button>
           </div>
         </div>
       </div>

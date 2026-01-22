@@ -1,0 +1,5 @@
+- [x] Add backend controller function to mark module as completed
+- [x] Add backend route for marking module completed
+- [x] Add frontend API function to call the backend
+- [x] Add "Module Completed" button in Module.jsx
+- [x] Update CourseDisplay.jsx to show completed modules section and mark completed modules

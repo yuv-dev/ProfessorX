@@ -60,4 +60,72 @@ const checkEnrollment = async (req, res) => {
   }
 };
 
-module.exports = { getUserProgress, enrollInCourse, checkEnrollment };
+const updateLastActiveModule = async (req, res) => {
+  try {
+    const { courseId, moduleId } = req.body;
+    const userId = req.user.id;
+
+    // Find and update the progress record
+    const progress = await Progress.findOneAndUpdate(
+      { userId, courseId },
+      { lastActiveModule: moduleId, lastAccessed: new Date() },
+      { new: true }
+    );
+
+    if (!progress) {
+      return res.status(404).json({ error: "Progress record not found" });
+    }
+
+    res.json({ progress });
+  } catch (err) {
+    console.error("Error updating last active module:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const getProgressByCourseId = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.user.id;
+
+    console.log("Progress Controller");
+    const progress = await Progress.findOne({ userId, courseId });
+    if (!progress) {
+      return res.status(404).json({ error: "Progress not found" });
+    }
+
+    res.json({ progress });
+  } catch (err) {
+    console.error("Error fetching progress by course ID:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const markModuleCompleted = async (req, res) => {
+  try {
+    const { courseId, moduleId } = req.body;
+    const userId = req.user.id;
+
+    // Find the progress record
+    const progress = await Progress.findOne({ userId, courseId });
+    if (!progress) {
+      return res.status(404).json({ error: "Progress record not found" });
+    }
+
+    // Check if module is already completed
+    if (progress.completedModules.includes(moduleId)) {
+      return res.status(400).json({ error: "Module already completed" });
+    }
+
+    // Add module to completedModules array
+    progress.completedModules.push(moduleId);
+    await progress.save();
+
+    res.json({ progress });
+  } catch (err) {
+    console.error("Error marking module as completed:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { getUserProgress, enrollInCourse, checkEnrollment, updateLastActiveModule, getProgressByCourseId, markModuleCompleted };

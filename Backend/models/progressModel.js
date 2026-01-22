@@ -23,7 +23,7 @@ const ProgressSchema = new mongoose.Schema({
     learningGoal: String,
     preferredStyle: String,
   },
-  lastActiveModule: {type: String},
+  lastActiveModule: {type: mongoose.Schema.Types.ObjectId},
   completedModules: [{ type: mongoose.Schema.Types.ObjectId }], // Array of module IDs or names
   completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId }], // Array of Quizes IDs or names
   // completedProjects: [{ type: mongoose.Schema.Types.ObjectId }], // Array of Projects IDs or names
