@@ -1,5 +1,4 @@
 "use client";
-import { useCourse } from "@/context/CourseContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight, Home, BookOpen, Rocket } from "lucide-react";
@@ -16,7 +15,7 @@ export default function CourseBreadcrumbs({
   const isProject = pathname.includes("/projects/");
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8 overflow-x-auto whitespace-nowrap pb-2">
+    <nav className="flex items-center space-x-2 px-4 py-2 md:p-6 text-xs md:text-sm text-gray-500 overflow-x-auto whitespace-nowrap md:whitespace-normal pb-2">
       {/* 1. Dashboard Link */}
       <Link
         href="/dashboard/courses"

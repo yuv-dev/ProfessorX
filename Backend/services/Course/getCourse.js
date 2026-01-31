@@ -18,9 +18,19 @@ async function getCompleteCourseById(courseId) {
   return fullData;
 }
 
-async function getAllCourses() {
-  const allcourses = await Course.find().select("title description createdAt");
-  return allcourses;
+const Progress = require("../../models/progressModel");
+
+async function getAllCourses(userId) {
+  //Get all the courses already enrolled by user
+  const enrolledCourseIds = await Progress.find({ userId }).distinct(
+    "courseId",
+  );
+
+  //Fetch all the courses excluding the ones already enrolled in
+  const availableCourses = await Course.find({
+    _id: { $nin: enrolledCourseIds },
+  }).select("title description createdAt");
+  return availableCourses;
 }
 
 async function getAllCoursesByUser(userId) {

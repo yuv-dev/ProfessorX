@@ -1,155 +1,69 @@
-"use client";
-import React, { useState } from "react";
-import {
-  format,
-  addMonths,
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  isSameMonth,
-  isSameDay,
-  addDays,
-  parseISO,
-  isYesterday,
-  differenceInDays,
-} from "date-fns";
+import React from "react";
+import Calendar from "react-calendar";
+import { isSameDay, isBefore, addDays, subDays } from "date-fns";
+import "react-calendar/dist/Calendar.css";
+import "../../app/globals.css";
 
-const StreakCalendar = ({ streakDates = [] }) => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+const StreakCalendar = ({ activityLog }) => {
+  console.log("Activity Log:", activityLog);
 
-  // Calculate current consecutive streak
-  const calculateStreak = () => {
-    if (streakDates.length === 0) return 0;
+  // 1. Convert string dates to Date objects and sort them
+  const sortedDates = activityLog
+    .map((logDate) => new Date(logDate))
+    .sort((a, b) => a - b);
+  console.log("Sorted Dates:", sortedDates);
 
-    const sortedDates = streakDates
-      .map((d) => parseISO(d))
-      .sort((a, b) => b - a); // Newest first
 
-    let count = 0;
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Start checking from today or yesterday
-    let checkDate = isSameDay(sortedDates[0], today)
-      ? today
-      : isYesterday(sortedDates[0])
-      ? sortedDates[0]
-      : null;
-
-    if (!checkDate) return 0;
-
-    for (let i = 0; i < sortedDates.length; i++) {
-      if (isSameDay(sortedDates[i], checkDate)) {
-        count++;
-        checkDate = addDays(checkDate, -1);
-      } else {
-        break;
-      }
-    }
-    return count;
-  };
-
-  const renderHeader = () => (
-    <div className="flex items-center justify-between py-1 px-2 bg-gray-50 border-b">
-      <h2 className="text-sm font-bold text-gray-800">
-        {format(currentMonth, "MMMM yyyy")}
-      </h2>
-      <div className="flex gap-2">
-        <button
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-          className="px-2 hover:bg-gray-200 rounded"
-        >
-          ←
-        </button>
-        <button
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          className="px-2 hover:bg-gray-200 rounded"
-        >
-          →
-        </button>
-      </div>
-    </div>
+  // 2. Create a Set for quick lookups
+  const activeDaysSet = new Set(
+    sortedDates.map((date) => date.toDateString())
   );
+  console.log("Active Days Set:", activeDaysSet);
 
-  const renderDays = () => {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return (
-      <div className="grid grid-cols-7 mb-2 border-b">
-        {days.map((day) => (
-          <div
-            key={day}
-            className="text-center text-xs font-semibold text-gray-500 py-1 uppercase"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-    );
-  };
 
-  const renderCells = () => {
-    const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const dateString = date.toDateString();
+      if (!activeDaysSet.has(dateString)) return null;
 
-    const rows = [];
-    let days = [];
-    let day = startDate;
+      const isFirst = !activeDaysSet.has(subDays(date, 1).toDateString());
+      const isLast = !activeDaysSet.has(addDays(date, 1).toDateString());
 
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        const formattedDate = format(day, "yyyy-MM-dd");
-        const isStreak = streakDates.includes(formattedDate);
-        const isToday = isSameDay(day, new Date());
-
-        days.push(
-          <div
-            key={day}
-            className={`relative h-6 flex items-center justify-center border-sm transition-all
-              ${
-                !isSameMonth(day, monthStart)
-                  ? "text-gray-300"
-                  : "text-gray-700"
-              }
-              ${isStreak ? "bg-orange-100 text-orange-700 font-bold" : ""}
-            `}
-          >
-            <span
-              className={`z-10 text-sm ${isToday ? "border-b-2 border-blue-500" : ""}`}
-            >
-              {format(day, "d")}
-            </span>
-            {isStreak && (
-              <div className="absolute inset-0 bg-orange-400 opacity-20 rounded-lg m-1" />
-            )}
-          </div>
-        );
-        day = addDays(day, 1);
+      let className = "highlight-streak";
+      if (isFirst && isLast) {
+        className += " streak-single";
+      } else if (isFirst) {
+        className += " streak-start";
+      } else if (isLast) {
+        className += " streak-end";
+      } else {
+        className += " streak-middle";
       }
-      rows.push(
-        <div className="grid grid-cols-7" key={day}>
-          {days}
-        </div>
-      );
-      days = [];
+      console.log(`Date: ${dateString}, Class: ${className}`);
+      return className;
     }
-    return <div>{rows}</div>;
+    return null;
   };
 
   return (
-    <div className="max-w-md w-60 mx-auto bg-white shadow-xl rounded-xl overflow-hidden border">
-      <div className="p-2 bg-blue-400 text-white flex justify-between items-center">
-        <div className="flex gap-5" >
-          <h3 className="text-xs font-black">{calculateStreak()} Days Streak 🔥</h3>
-        </div>
+    <div className="bg-white p-4 rounded-lg shadow w-full max-w-md">
+      <div className="calendar-container flex justify-center">
+        <Calendar
+          tileClassName={tileClassName}
+          prev2Label={null}
+          next2Label={null}
+          showFixedNumberOfWeeks={true}
+        />
       </div>
-      {renderHeader()}
-      <div className="p-2">
-        {renderDays()}
-        {renderCells()}
+      <div className="flex items-center gap-4 mt-4 text-xs text-gray-500 justify-center">
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <span>Active</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 rounded-full bg-gray-200"></div>
+          <span>Inactive</span>
+        </div>
       </div>
     </div>
   );

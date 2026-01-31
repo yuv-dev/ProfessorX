@@ -1,7 +1,6 @@
 import {
   getCourseById,
   getCourseModuleById,
-  getProgressByCourseId,
 } from "@/lib/api-client";
 import Module from "@/Components/course/Module.jsx";
 import CourseBreadcrumb from "@/Components/course/Breadcrumb";

@@ -17,7 +17,9 @@ export default function Accordion({
       >
         <div className="flex items-center gap-3">
           {Icon && <Icon className="w-5 h-5 text-blue-600" />}
-          <span className="font-semibold text-gray-800">{title}</span>
+          <span className="font-semibold text-gray-800 text-sm md:text-base">
+            {title}
+          </span>
         </div>
         {isOpen ? (
           <ChevronUp className="w-5 h-5 text-gray-500" />
@@ -33,7 +35,9 @@ export default function Accordion({
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="p-5 border-t border-gray-200">{children}</div>
+            <div className="p-4 md:p-5 border-t border-gray-200">
+              {children}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

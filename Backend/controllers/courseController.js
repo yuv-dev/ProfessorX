@@ -160,7 +160,8 @@ const { getAllCourses } = require("../services/Course/getCourse");
 
 const fetchAllCourses = async (req, res) => {
   try {
-    const courses = await getAllCourses();
+    const userId = req.user.id;
+    const courses = await getAllCourses(userId);
     return res.status(200).json(courses);
   } catch (err) {
     console.error("fetchAllCourses error:", err);

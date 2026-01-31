@@ -1,5 +1,4 @@
-- [x] Add backend controller function to mark module as completed
-- [x] Add backend route for marking module completed
-- [x] Add frontend API function to call the backend
-- [x] Add "Module Completed" button in Module.jsx
-- [x] Update CourseDisplay.jsx to show completed modules section and mark completed modules
+# TODO: Improve Mobile Responsiveness of BreadCrumb.jsx
+
+- [ ] Edit px-front/Components/course/Breadcrumb.jsx to apply responsive padding, text size, and whitespace handling.
+- [ ] Test the component in a mobile view to ensure it displays correctly without horizontal scrolling issues.

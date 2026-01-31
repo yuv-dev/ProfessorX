@@ -4,6 +4,7 @@ const express = require("express");
 const courseRoutes = require("./routes/courseRoutes");
 const authRoutes = require("./routes/authRoutes");
 const progressRoutes = require("./routes/progressRoutes");
+const globalProgressRoutes = require("./routes/globalProgressRoutes");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cookieParser());
 app.use("/api/courses", courseRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/progress", progressRoutes);
+app.use("/api/global-progress", globalProgressRoutes);
 
 const PORT = process.env.PORT || 4000;
 

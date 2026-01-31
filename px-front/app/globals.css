@@ -108,3 +108,80 @@ body {
     @apply font-bold text-indigo-600;
   }
 }
+
+
+
+/* Remove default ugly borders */
+.react-calendar {
+  border: none;
+  font-family: inherit;
+  width: 100%;
+}
+
+/* Header Styling (Month/Year) */
+.react-calendar__navigation button {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* The actual days grid */
+.react-calendar__tile {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Make hover effects circular */
+  font-size: 0.9rem;
+}
+
+/* Hide weekends if you want, or just style them */
+.react-calendar__month-view__days__day--weekend {
+  color: #d10000;
+}
+
+/* --- STREAK HIGHLIGHTING --- */
+.highlight-streak {
+  background: #22c55e; /* green-500 */
+  color: white !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.highlight-streak abbr {
+  color: white !important;
+}
+
+/* A single day streak gets a full circle */
+.streak-single {
+  border-radius: 50%;
+}
+
+/* The start of a streak is rounded on the left */
+.streak-start {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* The end of a streak is rounded on the right */
+.streak-end {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* The middle of a streak is a square */
+.streak-middle {
+  border-radius: 0;
+}
+
+/* Hover state for non-active days */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f3f4f6;
+  border-radius: 50%;
+}

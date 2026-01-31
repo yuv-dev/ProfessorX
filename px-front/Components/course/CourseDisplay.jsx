@@ -49,15 +49,15 @@ const CourseDisplay = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16"
+      className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-2 sm:py-10 space-y-16"
     >
       {/* Header */}
       <div className="flex flex-col items-center md:relative">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-blue-600 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold text-blue-600 tracking-tight">
             {data.title}
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-600 leading-relaxed">
             {data.description}
           </p>
         </div>
@@ -89,7 +89,7 @@ const CourseDisplay = ({
             Continue Learning
           </h3>
 
-          <p className="text-gray-800 font-bold mb-4 text-3xl">
+          <p className="text-gray-800 font-bold mb-4 text-2xl sm:text-3xl">
             {" "}
             {lastActiveModuleData.moduleTitle}
           </p>
@@ -167,7 +167,7 @@ const CourseDisplay = ({
                           : "bg-white border-gray-200 hover:border-blue-300"
                       }`}
                     >
-                      <div className="p-6 grow">
+                      <div className="p-4 sm:p-6 grow">
                         <div className="flex justify-between items-start mb-4">
                           <span className={`text-xs font-bold px-2 py-1 rounded ${
                             isCompleted
@@ -191,7 +191,7 @@ const CourseDisplay = ({
                           {mod.summary}
                         </p>
                       </div>
-                      <div className={`px-6 py-4 border-t flex items-center justify-between ${
+                      <div className={`px-4 sm:px-6 py-4 border-t flex items-center justify-between ${
                         isCompleted
                           ? "bg-green-100 border-green-200"
                           : "bg-gray-50 border-gray-100"
@@ -229,7 +229,7 @@ const CourseDisplay = ({
                 {/* Final Project (Takes up 2 cols) */}
                 <div
                   onClick={() => onProjectSelect("final", "main")}
-                  className="cursor-pointer md:col-span-2 bg-linear-to-br from-gray-900 to-gray-800 text-white rounded-xl p-8 shadow-lg relative overflow-hidden group transition-all duration-300 hover:scale-[1.01]"
+                  className="cursor-pointer md:col-span-2 bg-linear-to-br from-gray-900 to-gray-800 text-white rounded-xl p-6 sm:p-8 shadow-lg relative overflow-hidden group transition-all duration-300 hover:scale-[1.01]"
                 >
                   <div className="absolute top-0 right-0 p-32 bg-blue-600 opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
 
@@ -247,7 +247,7 @@ const CourseDisplay = ({
                       {data.projects?.finalProject?.description}
                     </p>
 
-                    <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                           Core Features
@@ -292,7 +292,7 @@ const CourseDisplay = ({
                         </div>
                       </div>
                     </div>
-                    <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                       <div>
                         <h4 className="font-bold text-sm text-gray-400 uppercase mb-3">
                           Tech Requirements

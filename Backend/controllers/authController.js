@@ -1,4 +1,5 @@
 const { googleLogin } = require("../services/googleLoginService");
+const { initializeProgress, recordLogin } = require("./globalProgressController");
 
 //google Authentication and User Creation logic
 const googleAuthController = async (req, res) => {
@@ -16,6 +17,8 @@ const googleAuthController = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    await recordLogin(user._id);
 
     return res.status(200).json({ token, user });
   } catch (error) {

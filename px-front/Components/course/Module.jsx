@@ -16,11 +16,11 @@ import {
   getProgressByCourseId,
 } from "@/lib/api-client.js";
 
-const Module = ({ module, courseId }) => {
+const Module = ({ module, courseId, nextModule }) => {
   const router = useRouter();
   const [isCompleted, setIsCompleted] = useState();
   const [isCompleting, setIsCompleting] = useState(false);
-
+  console.log(nextModule);
   useEffect(() => {
     const getCourseProgress = async () => {
       if (courseId) {
@@ -46,7 +46,8 @@ const Module = ({ module, courseId }) => {
     setIsCompleting(true);
     try {
       await markModuleCompleted(courseId, module._id);
-      await updateProgress(courseId, nextModule._id);
+      if (nextModule !== null && nextModule !== undefined)
+        await updateProgress(courseId, nextModule._id);
       setIsCompleted(true);
     } catch (error) {
       console.error("Failed to mark module as completed:", error);

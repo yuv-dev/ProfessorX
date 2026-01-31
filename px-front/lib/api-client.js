@@ -51,7 +51,35 @@ export const client = {
 /*************************************************************************** */
 
 // API functions
+export const sendHeartBeat = async (courseId) => {
+  const body = { courseId: courseId };
+  return await client.post("/api/dashboard/heartbeat", body);
+};
 
+//Global Progress APIs
+export const getDashboardData = async () => {
+  return await client.get("/api/global-progress/");
+};
+export const updateActivityStats = async (sessionDurationMinutes=0) => {
+  const body = { sessionDurationMinutes};
+  return await client.post("/api/global-progress/activity", body);
+};
+export const updateLastActiveModule = async (courseId, moduleId, progressPercentage) => {
+  const body = { courseId, moduleId, progressPercentage};
+  return await client.put("/api/global-progress/module", body);
+};
+export const updateSkill = async (subject, rank) => {
+  const body = {subject, rank};
+  return await client.put("/api/global-progress/skill", body);
+};
+export const addMilestone = async (title) => {
+  const body = { title};
+  return await client.post("/api/global-progress/milestone", body);
+};
+
+
+
+//Course Progress APIs
 export const getUserEnrolledCourses = async (userId) => {
   return await client.get(`/api/progress/user/${userId}?populate=courseId`);
 };
@@ -78,6 +106,10 @@ export const getProgressByCourseId = async (courseId) => {
 export const markModuleCompleted = async (courseId, moduleId) => {
   const body = { courseId, moduleId };
   return await client.put("/api/progress/mark-module-completed", body);
+};
+
+export const markCourseAsCompleted = async (courseId) => {
+  return await client.put(`/api/progress/course/${courseId}/complete`);
 };
 
 export const getAllCourses = async () => {
@@ -114,6 +146,9 @@ export const generateCourse = async (body) => {
   return await client.post("/api/courses/generate", body);
 };
 
+
+
+//auth
 export const googleLogin = async (credential) => {
   return await client.post("/api/auth/google", { credential });
 };
